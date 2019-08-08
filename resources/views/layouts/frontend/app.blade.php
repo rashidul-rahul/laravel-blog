@@ -20,6 +20,8 @@
 
     <link href="{{ asset('assets/frontend/css/ionicons.css') }}" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
     @stack('css')
 
 </head>
@@ -34,6 +36,10 @@
 
 <!-- SCIPTS -->
 
+<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+
+<script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+
 <script src="{{ asset('assets/frontend/js/jquery-3.1.1.min.js') }}"></script>
 
 <script src="{{ asset('assets/frontend/js/tether.min.js') }}"></script>
@@ -43,6 +49,7 @@
 @stack('js')
 
 <script src="{{ asset('assets/frontend/js/scripts.js') }}"></script>
+{!! Toastr::message() !!}
 
 
 </body>
