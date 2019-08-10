@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'tag')
+@section('title', 'Category')
 
 @push('css')
     <link href="{{ asset('assets/backend/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet" />
@@ -17,23 +17,29 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Create New Tag
+                            Edit Category
                         </h2>
                     </div>
                     <div class="body">
-                        <form action="{{ route('admin.tag.store') }}" method="POST">
+                        <form action="{{ route('admin.category.update', $category->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
+{{--                            @method('PUT')--}}
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <input type="text" id="category-name" name="name" class="form-control">
-                                    <label class="form-label">Tag Name</label>
+                                    <input type="text" name="name" class="form-control" value="{{ $category->name }}">
+                                    <label class="form-label">Category Name</label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="file" name="image">
                                 </div>
                             </div>
 
                             <input type="checkbox" id="remember_me_2" class="filled-in">
                             <br>
-                            <a class="btn btn-primary m-t-15 waves-effect" href="{{ route('admin.tag.index') }}">BACK</a>
-                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">CREATE</button>
+                            <a class="btn btn-primary m-t-15 waves-effect" href="{{ route('admin.category.index') }}">BACK</a>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">UPDATE</button>
                         </form>
                     </div>
                 </div>

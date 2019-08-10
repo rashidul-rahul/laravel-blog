@@ -34,7 +34,7 @@
         <ul class="list">
             <li class="header">MAIN NAVIGATION</li>
             @if(Request::is('admin*'))
-                <li class="{{ Request::is('admin/deashboard') ? 'active': '' }}">
+                <li class="{{ Request::is('admin/dashboard') ? 'active': '' }}">
                     <a href="{{ route('admin.dashboard') }}">
                         <i class="material-icons">dashboard</i>
                         <span>Dashboard</span>
@@ -44,6 +44,12 @@
                     <a href="{{ route('admin.tag.index') }}">
                         <i class="material-icons">label</i>
                         <span>Tag</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('admin/category*') ? 'active': '' }}">
+                    <a href="{{ route('admin.category.index') }}">
+                        <i class="material-icons">category</i>
+                        <span>Category</span>
                     </a>
                 </li>
                 <li class="header">
