@@ -65,6 +65,7 @@ class CategoryController extends Controller
                 $resizeImage = Image::make($image)->resize(1600, 479)->save();
                 Storage::disk('public')->put('category/'.$imageName, $resizeImage);
 
+
                 //check category/storage folder or create folder
                 if(!Storage::disk('public')->exists('category/slider')){
                     Storage::disk('public')->makeDirectory('category/slider');
@@ -121,8 +122,60 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+            $this->validate($request, [
+                'name' => 'required',
+                'image' => 'mimes:jpeg,png,bmp,jpg'
+            ]);
+            //get image
+            $image = $request->file('image');
+            $slug = Str::slug($request->name, '-');
+            $category = Category::find($id);
+            if (isset($image)){
+                //take current date and time
+                $currentDateTime = Carbon::now()->toDateString();
+                $imageName = $slug.'-'.$currentDateTime.'-'.uniqid().'.'.$image->getClientOriginalExtension();
+
+                //check folder or create folder
+                if(!Storage::disk('public')->exists('category')){
+                    Storage::disk('public')->makeDirectory('category');
+                }
+
+//                resize image
+                $resizeImage = Image::make($image)->resize(1600, 479)->save();
+                Storage::disk('public')->put('category/'.$imageName, $resizeImage);
+                //delete old image
+                if(Storage::disk('public')->exists('category/'.$category->image)){
+                    Storage::disk('public')->delete('category/'.$category->image);
+                }
+
+
+                //check category/storage folder or create folder
+                if(!Storage::disk('public')->exists('category/slider')){
+                    Storage::disk('public')->makeDirectory('category/slider');
+                }
+
+                $resizeSliderImage = Image::make($image)->resize(500, 333)->save();
+                Storage::disk('public')->put('category/slider/'.$imageName, $resizeSliderImage);
+
+                //delete old slider image
+                if(Storage::disk('public')->exists('category/slider/'.$category->image)){
+                    Storage::disk('public')->delete('category/slider/'.$category->image);
+                }
+            }else {
+                $imageName = $category->image;
+            }
+
+            $category->name = $request->name;
+            $category->slug = $slug;
+            $category->image = $imageName;
+            $category->save();
+            Toastr::success('Category successfully Updated', 'Success');
+            return redirect()->route('admin.category.index');
+
     }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -132,6 +185,18 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+
+        if(Storage::disk('public')->exists('category/'.$category->image)){
+            Storage::disk('public')->delete('category/'.$category->image);
+        }
+
+        if(Storage::disk('public')->exists('category/slider/'.$category->image)){
+            Storage::disk('public')->delete('category/slider/'.$category->image);
+        }
+
+        $category->delete();
+        Toastr::success('Category Delete Successfully', 'Success');
+        return redirect()->back();
     }
 }

@@ -23,7 +23,7 @@
                     <div class="body">
                         <form action="{{ route('admin.category.update', $category->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
-{{--                            @method('PUT')--}}
+                            @method('PUT')
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <input type="text" name="name" class="form-control" value="{{ $category->name }}">
