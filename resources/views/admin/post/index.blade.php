@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Category')
+@section('title', 'Post')
 
 @push('css')
     <link href="{{ asset('assets/backend/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet">
@@ -10,9 +10,9 @@
     <div class="container-fluid">
         <div class="block-header">
             <h2>
-                <a href="{{ route('admin.category.create') }}" class="btn btn-primary waves-effect">
+                <a href="{{ route('admin.post.create') }}" class="btn btn-primary waves-effect">
                     <i class="material-icons">add</i>
-                    <span>Create New Category</span>
+                    <span>Create New Post</span>
                 </a>
             </h2>
         </div>
@@ -22,8 +22,8 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            All Category
-                            <span class="badge bg-green">{{ $categories->count() }}</span>
+                            All Post
+                            <span class="badge bg-green">{{ $posts->count() }}</span>
                         </h2>
                     </div>
                     <div class="body">
@@ -32,39 +32,60 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Post Count</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th><i class="material-icons">visibility</i></th>
+                                    <th>Is Approve</th>
+                                    <th>Status</th>
                                     <th>Created At</th>
-                                    <th>Upadate At</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Post Count</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th><i class="material-icons">visibility</i></th>
+                                    <th>Is Approve</th>
+                                    <th>Status</th>
                                     <th>Created At</th>
-                                    <th>Upadate At</th>
                                     <th>Action</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                @foreach($categories as $key=>$category)
+                                @foreach($posts as $key=>$post)
                                 <tr>
                                     <td>{{ $key+1 }}</td>
-                                    <td>{{ $category->name }}</td>
-                                    <td>{{ $category->posts->count() }}</td>
-                                    <td>{{ $category->created_at }}</td>
-                                    <td>{{ $category->updated_at }}</td>
+                                    <td>{{ substr($post->title, 0, 15) }}</td>
+                                    <td>{{ $post->user->name }}</td>
+                                    <td>{{ $post->view_count }}</td>
+                                    <td>
+                                        @if($post->is_approve)
+                                            <span class="badge bg-blue">Approved</span>
+                                        @else
+                                            <span class="badge bg-pink">Pending</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($post->status)
+                                            <span class="badge bg-blue">Published</span>
+                                        @else
+                                            <span class="badge bg-pink">Pending</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $post->created_at }}</td>
                                     <td class="text-center">
-                                        <a class="btn btn-primary waves-effect" href="{{ route('admin.category.edit', $category->id) }}">
+                                        <a class="btn btn-info waves-effect" href="{{ route('admin.post.show', $post->id) }}">
+                                            <i class="material-icons">visibility</i>
+                                        </a>
+                                        <a class="btn btn-primary waves-effect" href="{{ route('admin.post.edit', $post->id) }}">
                                             <i class="material-icons">edit</i>
                                         </a>
-                                        <button class="btn btn-danger" onclick="deleteCategory({{ $category->id }});">
+                                        <button class="btn btn-danger" onclick="deletePost({{ $post->id }});">
                                             <i class="material-icons">delete</i>
                                         </button>
-                                        <form action="{{ route('admin.category.destroy', $category->id) }}" id="delete-form-{{ $category->id }}" method="POST">
+                                        <form action="{{ route('admin.post.destroy', $post->id) }}" id="delete-form-{{ $post->id }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                         </form>
@@ -98,7 +119,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
     <script type="text/javascript">
-        function deleteCategory(id){
+        function deletePost(id){
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-success',
