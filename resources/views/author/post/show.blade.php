@@ -9,7 +9,7 @@
 @section('content')
     <div class="container-fluid">
         <!-- Vertical Layout | With Floating Label -->
-        <a href="{{ route('admin.post.index') }}" class="btn btn-danger">
+        <a href="{{ route('author.post.index') }}" class="btn btn-danger">
             <i class="material-icons">keyboard_backspace</i>
             <span>Back</span>
         </a>
@@ -26,59 +26,59 @@
         @endif
         <br>
         <br>
-            <div class="row clearfix">
-                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2>
-                                {{ $post->title }}
-                                <small>Posted by <strong>{{ $post->user->name }}</strong> on {{ $post->created_at->toFormattedDateString() }}</small>
-                            </h2>
-                        </div>
-                        <div class="body">
-                            {!! $post->body !!}
-                        </div>
+        <div class="row clearfix">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            {{ $post->title }}
+                            <small>Posted by <strong>{{ $post->user->name }}</strong> on {{ $post->created_at->toFormattedDateString() }}</small>
+                        </h2>
+                    </div>
+                    <div class="body">
+                        {!! $post->body !!}
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <div class="header bg-cyan">
-                            <h2>
-                                Categories
-                            </h2>
-                        </div>
-                        <div class="body">
-                            @foreach($post->categories as $category)
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header bg-cyan">
+                        <h2>
+                            Categories
+                        </h2>
+                    </div>
+                    <div class="body">
+                        @foreach($post->categories as $category)
                             <span class="label bg-cyan">{{ $category->name }}</span>
-                            @endforeach
-                        </div>
+                        @endforeach
                     </div>
-                    <div class="card">
-                        <div class="header bg-green">
-                            <h2>
-                                Tags
-                            </h2>
-                        </div>
-                        <div class="body">
-                            @foreach($post->tags as $tag)
-                                <span class="label bg-green">{{ $tag->name }}</span>
-                            @endforeach
-                        </div>
+                </div>
+                <div class="card">
+                    <div class="header bg-green">
+                        <h2>
+                            Tags
+                        </h2>
                     </div>
-                    <div class="card">
-                        <div class="header bg-brown">
-                            <h2>
-                                Featured Image
-                            </h2>
-                        </div>
-                        <div class="body">
-                            <div class="">
-                                <img class="img-thumbnail" src="{{ Storage::disk('public')->url('post/'.$post->image) }}" alt="Featured Image">
-                            </div>
+                    <div class="body">
+                        @foreach($post->tags as $tag)
+                            <span class="label bg-green">{{ $tag->name }}</span>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="header bg-brown">
+                        <h2>
+                            Featured Image
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="">
+                            <img class="img-thumbnail" src="{{ Storage::disk('public')->url('post/'.$post->image) }}" alt="Featured Image">
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         <!-- Vertical Layout | With Floating Label -->
     </div>
 @endsection
