@@ -19,10 +19,15 @@
                 <span>Approved</span>
             </button>
         @else
-            <button class="btn btn-danger pull-right" disabled>
-                <i class="material-icons">watch_later</i>
-                <span>Pending</span>
+
+            <button class="btn btn-info pull-right" onclick="postApproval()">
+                <i class="material-icons">done</i>
+                <span>Approve</span>
             </button>
+            <form action="{{ route('admin.post.approve', $post->id) }}" id="approval-form" method="POST" style="display: none">
+                @csrf
+                @method('PUT')
+            </form>
         @endif
         <br>
         <br>
@@ -72,9 +77,7 @@
                             </h2>
                         </div>
                         <div class="body">
-                            <div class="">
-                                <img class="img-thumbnail" src="{{ Storage::disk('public')->url('post/'.$post->image) }}" alt="Featured Image">
-                            </div>
+                                <img style="width: 100%; height: auto" src="{{ Storage::disk('public')->url('post/'.$post->image) }}" alt="Featured Image">
                         </div>
                     </div>
                 </div>
@@ -84,27 +87,41 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('assets/backend/plugins/tinymce/tinymce.js') }}"></script>
-    <script>
-        $(function () {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
-            //TinyMCE
-            tinymce.init({
-                selector: "textarea#tinymce",
-                theme: "modern",
-                height: 300,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-                    'searchreplace wordcount visualblocks visualchars code fullscreen',
-                    'insertdatetime media nonbreaking save table contextmenu directionality',
-                    'emoticons template paste textcolor colorpicker textpattern imagetools'
-                ],
-                toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-                toolbar2: 'print preview media | forecolor backcolor emoticons',
-                image_advtab: true
-            });
-            tinymce.suffix = ".min";
-            tinyMCE.baseURL = '{{ asset('assets/backend/plugins/tinymce') }}';
-        });
+    <script type="text/javascript">
+        function postApproval(){
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false,
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You want to approve this post!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, approve it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    event.preventDefault();
+                    document.getElementById('approval-form').submit();
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'The post is still pending',
+                        'info'
+                    )
+                }
+            })
+        }
     </script>
 @endpush

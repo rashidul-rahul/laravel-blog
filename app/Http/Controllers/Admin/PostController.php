@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
+use App\Notifications\AuthorPostApprove;
+use App\Notifications\SubscriberMail;
 use App\Post;
+use App\Subscribe;
 use App\Tag;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -93,6 +97,12 @@ class PostController extends Controller
 
             $post->categories()->attach($request->categories);
             $post->tags()->attach($request->tags);
+
+            $subscribers = Subscribe::all();
+            foreach ($subscribers as $subscriber){
+                Notification::route('mail', $subscriber->email)
+                    ->notify(new SubscriberMail($post));
+            }
             Toastr::success('Post Added Successfully', 'Success');
             return redirect()->route('admin.post.index');
 
@@ -185,6 +195,31 @@ class PostController extends Controller
         $post->tags()->sync($request->tags);
         Toastr::success('Post Successfully Updated', 'Success');
         return redirect()->route('admin.post.index');
+    }
+
+    public function pending(){
+        $posts = Post::where('is_approve', 0)->get();
+        return view('admin.post.pending', compact('posts'));
+    }
+
+    public function approve($id){
+        $post = Post::find($id);
+        if($post->is_approve == false){
+            $post->is_approve = true;
+            $post->save();
+            $post->user->notify(new AuthorPostApprove($post));
+
+            $subscribers = Subscribe::all();
+            foreach ($subscribers as $subscriber){
+                Notification::route('mail', $subscriber->email)
+                    ->notify(new SubscriberMail($post));
+            }
+            Toastr::success('Post already approved', 'Success');
+            return redirect()->back();
+        } else{
+            Toastr::info('Post already approved', 'Info');
+            return redirect()->back();
+        }
     }
 
     /**
