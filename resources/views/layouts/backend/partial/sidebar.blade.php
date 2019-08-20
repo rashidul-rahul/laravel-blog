@@ -2,7 +2,7 @@
     <!-- User Info -->
     <div class="user-info">
         <div class="image">
-            <img src="{{ asset('assets/backend/images/user.png') }}" width="48" height="48" alt="User" />
+            <img src="{{ Storage::disk('public')->url('profile_pic/'.Auth::user()->image) }}" width="48" height="48" alt="User" />
         </div>
         <div class="info-container">
             <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</div>
@@ -64,6 +64,12 @@
                         <span>Pending Posts</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('admin/favorite-post*') ? 'active': '' }}">
+                    <a href="{{ route('admin.favorite.post') }}">
+                        <i class="material-icons">favorite</i>
+                        <span>Favorite Posts</span>
+                    </a>
+                </li>
                 <li class="{{ Request::is('admin/subscriber*') ? 'active': '' }}">
                     <a href="{{ route('admin.subscriber') }}">
                         <i class="material-icons">facebook</i>
@@ -72,6 +78,12 @@
                 </li>
                 <li class="header">
                     System
+                </li>
+                <li class="{{ Request::is('admin/settings') ? 'active': '' }}">
+                    <a href="{{ route('admin.settings') }}">
+                        <i class="material-icons">settings</i>
+                        <span>Settings</span>
+                    </a>
                 </li>
                 <li>
                     <a class="" href="{{ route('logout') }}"
@@ -99,8 +111,20 @@
                         <span>Post</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('author/favorite-post*') ? 'active': '' }}">
+                    <a href="{{ route('author.favorite.post') }}">
+                        <i class="material-icons">favorite</i>
+                        <span>Favorite Posts</span>
+                    </a>
+                </li>
                 <li class="header">
                     System
+                </li>
+                <li class="{{ Request::is('author/settings') ? 'active': '' }}">
+                    <a href="{{ route('author.settings') }}">
+                        <i class="material-icons">settings</i>
+                        <span>Settings</span>
+                    </a>
                 </li>
                 <li>
                     <a class="" href="{{ route('logout') }}"

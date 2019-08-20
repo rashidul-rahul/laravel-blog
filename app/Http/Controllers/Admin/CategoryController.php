@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
-use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Brian2694\Toastr\Facades\Toastr;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -98,7 +98,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**

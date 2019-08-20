@@ -11,13 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
 
 Route::post('subscribe', 'SubscribeController@store')->name('subscribe.store');
+
+Route::group(['middleware' => ['auth']], function (){
+    Route::post('favorite/{post}/add', 'FavoriteController@addFavorite')->name('post.favorite');
+});
 
 
 Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function (){
@@ -30,6 +32,11 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'Admin', 'mi
     Route::put('post/{id}/approve', 'PostController@approve')->name('post.approve');
     Route::get('subscriber', 'SubscribeController@index')->name('subscriber');
     Route::delete('subscriber/{id}/delete', 'SubscribeController@destroy')->name('subscriber.destroy');
+    Route::get('settings', 'SettingsController@index')->name('settings');
+    Route::put('profile-update', 'SettingsController@profileUpdate')->name('profile.update');
+    Route::post('password-change', 'SettingsController@changePassword')->name('password.change');
+    Route::get('favorite-post', 'FavoriteController@index')->name('favorite.post');
+    Route::post('remove-favorite/{id}/post', 'FavoriteController@removeFavorite')->name('remove.favorite.post');
 
 });
 
@@ -37,4 +44,9 @@ Route::group(['as' => 'author.', 'prefix' => 'author', 'namespace' => 'Author', 
 
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
     Route::resource('post', 'PostController');
+    Route::get('settings', 'SettingsController@index')->name('settings');
+    Route::put('profile-update', 'SettingsController@profileUpdate')->name('profile.update');
+    Route::post('password-change', 'SettingsController@changePassword')->name('password.change');
+    Route::get('favorite/post', 'FavoriteController@index')->name('favorite.post');
+    Route::post('remove-favorite/{id}/post', 'FavoriteController@removeFavorite')->name('remove.favorite.post');
 });
