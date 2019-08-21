@@ -20,7 +20,7 @@
             <div class="swiper-wrapper">
                 @foreach($categories as $category)
                     <div class="swiper-slide">
-                    <a class="slider-category" href="#">
+                    <a class="slider-category" href="{{ route('category.post', $category->slug) }}">
                         <div class="blog-image"><img src="{{ Storage::disk('public')->url('category/slider/'.$category->image) }}" alt="Blog Image"></div>
 
                         <div class="category">
