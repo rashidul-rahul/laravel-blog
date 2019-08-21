@@ -31,7 +31,7 @@
 
 @yield('content')
 
-@include('layouts.frontend.partial.footer', with($categories))
+@include('layouts.frontend.partial.footer')
 
 
 <!-- SCIPTS -->

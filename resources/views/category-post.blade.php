@@ -1,6 +1,6 @@
 @extends('layouts.frontend.app')
 
-@section('title', 'title')
+@section('title', 'Category')
 
 @push('css')
     <link href="{{ asset('assets/frontend/css/posts/styles.css') }}" rel="stylesheet">
@@ -29,7 +29,8 @@
         <div class="container">
 
             <div class="row">
-                @foreach($category->posts as $post)
+                @if($category->post->count() > 0)
+                    @foreach($category->posts as $post)
                     <div class="col-lg-4 col-md-6">
                         <div class="card h-100">
                             <div class="single-post post-style-1">
@@ -71,7 +72,11 @@
                         </div><!-- card -->
                     </div><!-- col-lg-4 col-md-6 -->
                 @endforeach
-
+                @else
+                    <div>
+                        <h3>No post Found for this category</h3>
+                    </div>
+                @endif
 
             </div>
 {{--            {{ $posts->links() }}--}}

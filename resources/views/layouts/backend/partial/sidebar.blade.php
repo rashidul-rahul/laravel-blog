@@ -82,6 +82,12 @@
                         <span>Comments</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('admin/author*') ? 'active': '' }}">
+                    <a href="{{ route('admin.author.index') }}">
+                        <i class="material-icons">face</i>
+                        <span>Authors</span>
+                    </a>
+                </li>
                 <li class="header">
                     System
                 </li>

@@ -16,6 +16,7 @@ Route::get('posts','PostController@index')->name('post.index');
 Route::get('post/{slug}','PostController@details')->name('post.details');
 Route::get('category/{slug}','PostController@categoryPost')->name('category.post');
 Route::get('tag/{slug}','PostController@tagPost')->name('tag.post');
+Route::get('search','SearchController@search')->name('search.post');
 
 Auth::routes();
 
@@ -44,6 +45,8 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'Admin', 'mi
     Route::post('remove-favorite/{id}/post', 'FavoriteController@removeFavorite')->name('remove.favorite.post');
     Route::get('comment', 'CommentController@index')->name('comment.index');
     Route::delete('comment/{id}/delete', 'CommentController@destroy')->name('comment.destroy');
+    Route::get('author', 'AuthorController@index')->name('author.index');
+    Route::delete('author/delete/{id}', 'AuthorController@destroy')->name('author.destroy');
 
 });
 

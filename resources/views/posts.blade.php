@@ -1,6 +1,6 @@
 @extends('layouts.frontend.app')
 
-@section('title', 'title')
+@section('title', 'All Post')
 
 @push('css')
     <link href="{{ asset('assets/frontend/css/posts/styles.css') }}" rel="stylesheet">

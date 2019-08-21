@@ -10,6 +10,7 @@
             <li><a href="{{ route('post.index') }}">Posts</a></li>
             @guest
                 <li><a href="{{ route('login') }}">Login</a></li>
+                <li><a href="{{ route('register') }}">Register</a></li>
             @else
                 @if(Auth::user()->role->id == 1)
                 <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -21,9 +22,9 @@
         </ul><!-- main-menu -->
 
         <div class="src-area">
-            <form>
+            <form action="{{ route('search.post') }}">
                 <button class="src-btn" type="submit"><i class="ion-ios-search-strong"></i></button>
-                <input class="src-input" type="text" placeholder="Type of search">
+                <input class="src-input" name="query" type="text" placeholder="Type of search">
             </form>
         </div>
 
