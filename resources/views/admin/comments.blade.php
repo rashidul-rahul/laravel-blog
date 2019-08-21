@@ -8,22 +8,22 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="block-header">
-            <h2>
-                <a href="{{ route('admin.post.create') }}" class="btn btn-primary waves-effect">
-                    <i class="material-icons">add</i>
-                    <span>Favorite Post</span>
-                </a>
-            </h2>
-        </div>
+{{--        <div class="block-header">--}}
+{{--            <h2>--}}
+{{--                <a href="{{ route('admin.post.create') }}" class="btn btn-primary waves-effect">--}}
+{{--                    <i class="material-icons">add</i>--}}
+{{--                    <span>Comments</span>--}}
+{{--                </a>--}}
+{{--            </h2>--}}
+{{--        </div>--}}
         <!-- Exportable Table -->
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            All Favorite Post
-                            <span class="badge bg-green">{{ $posts->count() }}</span>
+                            All Comments
+                            <span class="badge bg-green">{{ $comments->count() }}</span>
                         </h2>
                     </div>
                     <div class="body">
@@ -31,44 +31,70 @@
                             <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th><i class="material-icons">visibility</i></th>
-                                    <th><i class="material-icons">favorite</i></th>
+                                    <th>SL</th>
+                                    <th>Comment Info</th>
+                                    <th>Post Info</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th><i class="material-icons">visibility</i></th>
-                                    <th><i class="material-icons">favorite</i></th>
+                                    <th>SL</th>
+                                    <th>Comment Info</th>
+                                    <th>Post Info</th>
                                     <th>Action</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                @foreach($posts as $key=>$post)
-                                <tr>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ substr($post->title, 0, 15) }}</td>
-                                    <td>{{ $post->user->name }}</td>
-                                    <td>{{ $post->view_count }}</td>
-                                    <td>{{ $post->favorite_post_user()->count() }}</td>
-                                    <td class="text-center">
-                                        <a href="{{ route('post.details', $post->slug) }}" class="btn btn-info waves-effect" onclick="">
-                                            <i class="material-icons">visibility</i>
-                                        </a>
-                                        <a class="btn btn-danger" onclick="deleteFavorite({{ $post->id }});">
-                                            <i class="material-icons">delete</i>
-                                        </a>
-                                        <form action="{{ route('admin.remove.favorite.post', $post->id) }}" id="delete-favorite-{{ $post->id }}" method="POST">
-                                            @csrf
-                                        </form>
-                                    </td>
-                                </tr>
+                                @foreach($comments as $key=>$comment)
+                                    <tr>
+                                        <td>{{ $key+1 }}</td>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="">
+                                                        <img class="media-object" src="{{ Storage::disk('public')->url('profile_pic/'.$comment->user->image)
+                                                         }}" width="64" height="64" alt="User Image">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">
+                                                        {{ $comment->user->name }}
+                                                        <small>{{ $comment->created_at->diffForHumans() }}</small>
+                                                    </h4>
+                                                    <p>{{ $comment->comment }}</p>
+                                                    <a href="{{ route('post.details', $comment->post->slug.'#comments') }}">Reply</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="media">
+                                                <div class="media-right">
+                                                    <a target="_blank" href="{{ route('post.details', $comment->post->slug) }}">
+                                                        <img class="media-object" src="{{ Storage::disk('public')->url('post/'.$comment->post->image) }}"
+                                                          width="64" height="64"   alt="Post Image">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">
+                                                        <a target="_blank" href="{{ route('post.details', $comment->post->slug) }}">
+                                                            {{ Str::limit($comment->post->title, 30, '(...)') }}
+                                                        </a>
+                                                    </h4>
+                                                        <p>by {{ $comment->user->name }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="btn btn-danger" onclick="deleteComment({{ $comment->id }});">
+                                                <i class="material-icons">delete</i>
+                                            </a>
+                                            <form action="{{ route('admin.comment.destroy', $comment->id) }}" id="delete-comment-{{ $comment->id }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        </td>
+                                    </tr>
                                 @endforeach
                                 </tbody>
                             </table>
@@ -97,7 +123,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
     <script type="text/javascript">
-        function deletePost(id){
+        function deleteComment(id){
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-success',
@@ -117,7 +143,7 @@
             }).then((result) => {
                 if (result.value) {
                     event.preventDefault();
-                    document.getElementById('delete-form-'+id).submit();
+                    document.getElementById('delete-comment-'+id).submit();
                 } else if (
                     // Read more about handling dismissals
                     result.dismiss === Swal.DismissReason.cancel

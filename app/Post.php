@@ -21,4 +21,8 @@ class Post extends Model
     public function favorite_post_user(){
         return $this->belongsToMany('App\User');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Comment');
+    }
 }

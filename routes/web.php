@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('posts','PostController@index')->name('post.index');
+Route::get('post/{slug}','PostController@details')->name('post.details');
 
 Auth::routes();
 
@@ -19,6 +21,7 @@ Route::post('subscribe', 'SubscribeController@store')->name('subscribe.store');
 
 Route::group(['middleware' => ['auth']], function (){
     Route::post('favorite/{post}/add', 'FavoriteController@addFavorite')->name('post.favorite');
+    Route::post('comment/store', 'CommentController@store')->name('comment.store');
 });
 
 
@@ -37,6 +40,8 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin', 'namespace' => 'Admin', 'mi
     Route::post('password-change', 'SettingsController@changePassword')->name('password.change');
     Route::get('favorite-post', 'FavoriteController@index')->name('favorite.post');
     Route::post('remove-favorite/{id}/post', 'FavoriteController@removeFavorite')->name('remove.favorite.post');
+    Route::get('comment', 'CommentController@index')->name('comment.index');
+    Route::delete('comment/{id}/delete', 'CommentController@destroy')->name('comment.destroy');
 
 });
 
@@ -49,4 +54,6 @@ Route::group(['as' => 'author.', 'prefix' => 'author', 'namespace' => 'Author', 
     Route::post('password-change', 'SettingsController@changePassword')->name('password.change');
     Route::get('favorite/post', 'FavoriteController@index')->name('favorite.post');
     Route::post('remove-favorite/{id}/post', 'FavoriteController@removeFavorite')->name('remove.favorite.post');
+    Route::get('comment', 'CommentController@index')->name('comment.index');
+    Route::delete('comment/{id}/delete', 'CommentController@destroy')->name('comment.destroy');
 });

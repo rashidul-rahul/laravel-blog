@@ -48,4 +48,8 @@ class User extends Authenticatable
     public function favorite_post(){
         return $this->belongsToMany('App\Post');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Comments');
+    }
 }
